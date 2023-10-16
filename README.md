@@ -1,4 +1,4 @@
-# Visual-HTB-Writeup
+# Visual HTB Writeup
 
 [![Visual.png](https://i.postimg.cc/2yqMQBrb/Visual.png)](https://postimg.cc/MfS9xHcq)
 
