@@ -4,22 +4,22 @@ Small brief writeup for the machine Visual in HackTheBox (Medium Difficulty) wit
 NOTE: if you want to know more details about methods and payloads used in my writeup please, see the last section in this writeup for more information (Resources and Links) 
 															
 							
-   ----------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------
 
-  	# Enumeration and Target Info
+ # Enumeration and Target Info
  	
-   ----------------------------------------------------------------------------------------------------------------------------------------------------	
+----------------------------------------------------------------------------------------------------------------------------------------------------	
 
 	- ip 10.10.11.234
 	- Apache/2.4.56 (Win64) OpenSSL/1.1.1t PHP/8.1.17
 	- Application provides environment to automaticly compiles code for the user by providing a link to the repo
 	
 	
-   ----------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	 # nmap scan
+ # nmap scan
  	
-   ----------------------------------------------------------------------------------------------------------------------------------------------------	
+----------------------------------------------------------------------------------------------------------------------------------------------------	
 	
 	┌──(root㉿kali)-[~/htb/machines/visual]
 	└─# nmap -sC -A -O -sV -Pn -p- 10.10.11.234 -oN scan-map
@@ -48,11 +48,11 @@ NOTE: if you want to know more details about methods and payloads used in my wri
  
 
 	
-   ----------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------
  
- 	 # Dirsearch / Gobuster
+ # Dirsearch / Gobuster
  	
-   ----------------------------------------------------------------------------------------------------------------------------------------------------	
+----------------------------------------------------------------------------------------------------------------------------------------------------	
 	
 	┌──(root㉿kali)-[~/htb/machines/visual]
 	└─# dirsearch -u 10.10.11.234
@@ -177,11 +177,11 @@ NOTE: if you want to know more details about methods and payloads used in my wri
 	===============================================================
 
 
-   ----------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------
       
-	# Foothold and General Approach
+ # Foothold and General Approach
 	
-   ----------------------------------------------------------------------------------------------------------------------------------------------------	 
+----------------------------------------------------------------------------------------------------------------------------------------------------	 
     
 - We need to host and write some sort of a c# code that support .NET 6.0 using VS Code that we would later on host locally and then we need to
 	 find a way to execute this code on the internal network of the machine when it gets compiled and maybe establish a reverse shell.
@@ -215,16 +215,16 @@ NOTE: if you want to know more details about methods and payloads used in my wri
 		
 		
 		
-   ----------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------
 
-	    # User Access
+ # User Access
 	
-   ----------------------------------------------------------------------------------------------------------------------------------------------------	 	
+----------------------------------------------------------------------------------------------------------------------------------------------------	 
 	
-	- Now since we have an idea how to host a repo locally and how to import it on the target. Next we need to created a C# project using VScode and we 
+- Now since we have an idea how to host a repo locally and how to import it on the target. Next we need to created a C# project using VScode and we 
     were able to get an RCE using Pre-Build & Post-Build Events before and after comiling the project
 	
-	- After creating a C# project that the victim's system supports, we will add pre and post build events to the .csproj file of the project
+- After creating a C# project that the victim's system supports, we will add pre and post build events to the .csproj file of the project
 	
 	  (File) Visual.csproj
 	  
@@ -298,11 +298,11 @@ NOTE: if you want to know more details about methods and payloads used in my wri
 		PS C:\Users\enox\Desktop> 
                                                              
 		
-   ----------------------------------------------------------------------------------------------------------------------------------------------------    
+----------------------------------------------------------------------------------------------------------------------------------------------------    
       
-      	# Privilege Escalation
+ # Privilege Escalation
    
-   ----------------------------------------------------------------------------------------------------------------------------------------------------     
+----------------------------------------------------------------------------------------------------------------------------------------------------     
       
 - We check all users available in the system following the ps commands below.
 
@@ -361,14 +361,14 @@ NOTE: if you want to know more details about methods and payloads used in my wri
 	
 	
 	
-   ----------------------------------------------------------------------------------------------------------------------------------------------------    
+----------------------------------------------------------------------------------------------------------------------------------------------------    
 	
-	# Root Access
+ # Root Access
       
-   ----------------------------------------------------------------------------------------------------------------------------------------------------      
+----------------------------------------------------------------------------------------------------------------------------------------------------      
 
  
-	- Now that we got reverse shell on (nt authority\local service) account, we attempt to escalate our previleges using a tool called "FullPowers.exe"
+- Now that we got reverse shell on (nt authority\local service) account, we attempt to escalate our previleges using a tool called "FullPowers.exe"
 		
 	- We download and execute "FullPowers.exe" payload on the target and we were able esclate our privileges
       
@@ -451,29 +451,29 @@ NOTE: if you want to know more details about methods and payloads used in my wri
   	'FROM THE RIVER TO THE SEE, PALESTINE WILL BE FREE!
       
 
-   ----------------------------------------------------------------------------------------------------------------------------------------------------    
+----------------------------------------------------------------------------------------------------------------------------------------------------    
 	
-	# Resources and Links
+ # Resources and Links
       
-   ----------------------------------------------------------------------------------------------------------------------------------------------------      
+----------------------------------------------------------------------------------------------------------------------------------------------------      
 
-	- Host repo from a local machine over HTTP
-	  https://theartofmachinery.com/2016/07/02/git_over_http.html/
+- Host repo from a local machine over HTTP
+https://theartofmachinery.com/2016/07/02/git_over_http.html/
 
-	- Generate Reverse Shell
-	  https://www.revshells.com/
-
-
-	- PHP Reverse Shell
-	  https://github.com/ivan-sincek/php-reverse-shell/blob/master/src/reverse/php_reverse_shell.php
+- Generate Reverse Shell
+https://www.revshells.com/
 
 
-	- "FullPower.exe" Payload used to get the token for PE
-	  https://github.com/itm4n/FullPowers/releases/tag/v0.1
+- PHP Reverse Shell
+https://github.com/ivan-sincek/php-reverse-shell/blob/master/src/reverse/php_reverse_shell.php
+
+
+- "FullPower.exe" Payload used to get the token for PE
+https://github.com/itm4n/FullPowers/releases/tag/v0.1
 
    
-	- Payload that was used to pass commands with escalated privileges "GodPotato.exe"
-	  https://github.com/BeichenDream/GodPotato
+- Payload that was used to pass commands with escalated privileges "GodPotato.exe"
+https://github.com/BeichenDream/GodPotato
 
   
      
