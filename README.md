@@ -1,4 +1,7 @@
 # Visual-HTB-Writeup
+
+[![Visual.png](https://i.postimg.cc/2yqMQBrb/Visual.png)](https://postimg.cc/MfS9xHcq)
+
 Small brief writeup for the machine Visual in HackTheBox (Medium Difficulty) with the needed C# project to gain foothold and reverse shell along with used payloads to gain access to root.txt
 
 NOTE: if you want to know more details about methods and payloads used in my writeup please, see the last section in this writeup for more information (Resources and Links) 
@@ -449,7 +452,8 @@ NOTE: if you want to know more details about methods and payloads used in my wri
 
 
   	'FROM THE RIVER TO THE SEE, PALESTINE WILL BE FREE!
-      
+
+[![palestine.jpg](https://i.postimg.cc/BnMv7d2T/palestine.jpg)](https://postimg.cc/gxLdntSj)
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------    
 	
