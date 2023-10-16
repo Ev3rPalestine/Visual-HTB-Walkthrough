@@ -451,10 +451,6 @@ NOTE: if you want to know more details about methods and payloads used in my wri
       
 
 
-FROM THE RIVER TO THE SEE, PALESTINE WILL BE FREE!
-
-[![palestine.jpg](https://i.postimg.cc/BnMv7d2T/palestine.jpg)](https://postimg.cc/gxLdntSj)
-
 ----------------------------------------------------------------------------------------------------------------------------------------------------    
 	
  # Resources and Links
@@ -481,7 +477,9 @@ https://github.com/BeichenDream/GodPotato
 
   
      
+FROM THE RIVER TO THE SEE, PALESTINE WILL BE FREE!
 
+[![palestine.jpg](https://i.postimg.cc/BnMv7d2T/palestine.jpg)](https://postimg.cc/gxLdntSj)
       
       
       
