@@ -1,6 +1,6 @@
 # Visual HTB Writeup
 
-[![Visual.png](https://i.postimg.cc/2yqMQBrb/Visual.png)](https://postimg.cc/MfS9xHcq)
+[![Visual-header.png](https://i.postimg.cc/XvVvXgC6/Visual-header.png)](https://postimg.cc/yDbKbcjL)
 
 Small brief writeup for the machine Visual in HackTheBox (Medium Difficulty) with the needed C# project to gain foothold and reverse shell along with used payloads to gain access to root.txt
 
@@ -449,6 +449,9 @@ NOTE: if you want to know more details about methods and payloads used in my wri
 			[*] process start with pid 1316
           (Root.txt) ------->    b1737be04e3affa2e03b5b46c69f3cd7
       
+
+[![Visual.png](https://i.postimg.cc/2yqMQBrb/Visual.png)](https://postimg.cc/MfS9xHcq)
+
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------    
