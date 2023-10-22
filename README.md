@@ -450,7 +450,10 @@ NOTE: if you want to know more details about methods and payloads used in my wri
           (Root.txt) ------->    b1737be04e3affa2e03b5b46c69f3cd7
       
 
-[![Visual.png](https://i.postimg.cc/2yqMQBrb/Visual.png)](https://postimg.cc/MfS9xHcq)
+<p align="center">
+  <img src="https://i.postimg.cc/2yqMQBrb/Visual.png">
+</p>
+
 
 
 
