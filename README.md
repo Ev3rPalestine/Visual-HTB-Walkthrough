@@ -1,6 +1,9 @@
 # Visual HTB Writeup
 
-[![Visual-header.png](https://i.postimg.cc/XvVvXgC6/Visual-header.png)](https://postimg.cc/yDbKbcjL)
+<p align="center">
+  <img src="https://i.postimg.cc/XvVvXgC6/Visual-header.png">
+</p>
+
 
 Small brief writeup for the machine Visual in HackTheBox (Medium Difficulty) with the needed C# project to gain foothold and reverse shell along with used payloads to gain access to root.txt
 
